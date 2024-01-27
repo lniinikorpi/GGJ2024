@@ -9,6 +9,8 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 
+class UNiagaraSystem;
+
 UCLASS()
 class GGJ2024_API AGProjectile_Base : public AActor
 {
@@ -30,6 +32,9 @@ protected:
 	TObjectPtr<USphereComponent> SphereComp;
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UNiagaraSystem* HitParticle;
 
 	UFUNCTION()
 	void OnOverLapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

@@ -27,11 +27,13 @@ protected:
 	float SpawnInterval;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
-	TSubclassOf<AActor> MeleeEnemyClass;
+	TArray<TSubclassOf<AActor>> EnemyClasses;
 	UPROPERTY(EditDefaultsOnly, Category = "AI");
 	FTimerHandle SpawnEnemiesTimerHandle;
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TObjectPtr<UEnvQuery> SpawnQuery;
+
+	int32 EnemiesLeft;
 
 	UFUNCTION()
 	void SpawnEnemies_TimeElapsed();

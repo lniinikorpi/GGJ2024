@@ -3,6 +3,9 @@
 
 #include "Action/GAction_Attack.h"
 
+#include "GCharacter.h"
+#include "Action/GActionComponent.h"
+#include "AI/GAICharacter.h"
 #include "GameFramework/Character.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -24,6 +27,8 @@ void UGAction_Attack::StartAction_Implementation(AActor* Instigator)
 	FTimerDelegate Delegate;
 	Delegate.BindUFunction(this, "ActionAttackTimeElapsed", Char);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, Delegate, AttackDelay, false);
+
+	Instigator->GetComponentByClass<UGActionComponent>()->PlayPrimaryAttackEffect();
 }
 
 void UGAction_Attack::ActionAttackTimeElapsed(ACharacter* Instigator)
@@ -33,20 +38,41 @@ void UGAction_Attack::ActionAttackTimeElapsed(ACharacter* Instigator)
 	SpawnParams.Instigator = Instigator;
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, CalculateProjectileTransform(Instigator), SpawnParams);
 
-	StopAction(Instigator);
+	FTimerHandle TimerHandleFireRate;
+	FTimerDelegate DelegateFireRate;
+	DelegateFireRate.BindUFunction(this, "FireRateTimeElapsed", Instigator);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandleFireRate, DelegateFireRate, FireRateDelay, false);
+	FTimerHandle TimerHandleSpawnDelay;
+	FTimerDelegate DelegateSpawnDelay;
+	DelegateSpawnDelay.BindUFunction(this, "SpawnDelayTimeElapsed", Instigator);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandleSpawnDelay, DelegateFireRate, SpawnDelay, false);
 }
 
 FTransform UGAction_Attack::CalculateProjectileTransform(ACharacter* InstigatorActor)
 {
 	FVector HandLocation = InstigatorActor->GetMesh()->GetSocketLocation("middle_01_lSocket");
-	UE_LOG(LogTemp, Log, TEXT("Hand location: %s"), *HandLocation.ToString());
-	if(HandLocation == FVector::Zero())
+	//UE_LOG(LogTemp, Log, TEXT("Hand location: %s"), *HandLocation.ToString());
+	FRotator SpawnRotator;
+	if(Cast<AGCharacter>(InstigatorActor))
 	{
-		
+		SpawnRotator = InstigatorActor->GetMesh()->GetRelativeRotation();
+		//SpawnRotator.Yaw += 90;
 	}
-	FRotator SpawnRotator = InstigatorActor->GetMesh()->GetRelativeRotation();
+	else if(Cast<AGAICharacter>(InstigatorActor))
+	{
+		SpawnRotator = InstigatorActor->GetActorForwardVector().Rotation();
+	}
 	SpawnRotator.Pitch = 0;
-	SpawnRotator.Yaw += 90;
 	const FTransform SpawnTM = FTransform(SpawnRotator, HandLocation);
+	//DrawDebugLine(GetWorld(), HandLocation, SpawnRotator.)
 	return SpawnTM;
+}
+
+void UGAction_Attack::FireRateTimeElapsed(ACharacter* Instigator)
+{
+	StopAction(Instigator);
+}
+
+void UGAction_Attack::SpawnDelayTimeElapsed(ACharacter* Instigator)
+{
 }

@@ -10,6 +10,8 @@
 
 class UGAction;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayPrimaryEffect);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GGJ2024_API UGActionComponent : public UActorComponent
 {
@@ -36,11 +38,17 @@ public:
 
 	bool HasAction(FName ActionName);
 
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayPrimaryEffect OnPlayPrimaryEffect;
+
 	UFUNCTION(BlueprintCallable, Category="Actions")
 	void StartPrimaryAttackAction();
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void StartSecondaryAttackAction();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Actions")
+	void PlayPrimaryAttackEffect();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Actions")

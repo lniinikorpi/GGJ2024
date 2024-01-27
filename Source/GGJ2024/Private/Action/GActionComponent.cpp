@@ -136,6 +136,11 @@ void UGActionComponent::StartSecondaryAttackAction()
 	StartActionByName(GetOwner(), NewAction->ActionName);
 }
 
+void UGActionComponent::PlayPrimaryAttackEffect_Implementation()
+{
+	OnPlayPrimaryEffect.Broadcast();
+}
+
 // Called every frame
 void UGActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

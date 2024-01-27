@@ -25,6 +25,18 @@ void AGAIController::BeginPlay()
 
 void AGAIController::Tick(float DeltaSeconds)
 {
-	//GetBlackboardComponent()->SetValueAsVector("TargetMovePosition", MyPawn->GetActorLocation());
-
+	UObject* TargetObject = GetBlackboardComponent()->GetValueAsObject("TargetActor");
+	if(!TargetObject)
+	{
+		return;
+	}
+	AActor* TargetActor = Cast<AActor>(TargetObject);
+	if(!TargetActor)
+	{
+		return;
+	}
+	FVector Dir = TargetActor->GetActorLocation() - GetPawn()->GetActorLocation();
+	Dir.Normalize();
+	SetControlRotation(Dir.Rotation());
+	//GEngine->AddOnScreenDebugMessage(0, 0, FColor::White, GetControlRotation().ToString());
 }

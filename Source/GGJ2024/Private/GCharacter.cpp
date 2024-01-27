@@ -29,6 +29,9 @@ AGCharacter::AGCharacter()
 	AttributeComp->MaxHealth = 100;
 	AttributeComp->CurrentHealth = AttributeComp->MaxHealth;
 
+	ProjectileSpawn = CreateDefaultSubobject<USceneComponent>("ProjectileSpawn");
+	ProjectileSpawn->SetupAttachment(GetMesh());
+
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
 
@@ -88,7 +91,7 @@ void AGCharacter::MouseLook(const FInputActionValue& Value)
 		//UE_LOG(LogTemp, Log, TEXT("%s"), *ViewportSize.ToString());
 		//UE_LOG(LogTemp, Log, TEXT("%s"), *Hitresult.ImpactPoint.ToString());
 		FRotator CharacterRotation = directionToMouse.Rotation();
-		CharacterRotation.Yaw -= 90;
+		//CharacterRotation.Yaw -= 90;
 		GetMesh()->SetRelativeRotation(CharacterRotation);
 	}
 	//UE_LOG(LogTemp, Log, TEXT("%s"), *mousePos.ToString());

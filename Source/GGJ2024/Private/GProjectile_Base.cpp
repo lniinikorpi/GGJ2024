@@ -5,6 +5,7 @@
 
 #include "GGlobalFunctionLibrary.h"
 #include "Components/SphereComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
@@ -48,6 +49,10 @@ void AGProjectile_Base::OnOverLapBegin(UPrimitiveComponent* OverlappedComponent,
 	if(OtherActor == GetInstigator())
 	{
 		return;
+	}
+	if(HitParticle)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitParticle, GetActorLocation(), GetActorRotation());
 	}
 	UGGlobalFunctionLibrary::ApplyDamage(GetInstigator(), OtherActor, DamageAmount);
 	GetWorld()->DestroyActor(this);

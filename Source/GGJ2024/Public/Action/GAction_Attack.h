@@ -29,4 +29,15 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
 	float AttackDelay;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
+	float FireRateDelay;
+
+	UFUNCTION()
+	void FireRateTimeElapsed(ACharacter* Instigator);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
+	float SpawnDelay;
+	UFUNCTION()
+	void SpawnDelayTimeElapsed(ACharacter* Instigator);
 };
