@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "GCharacter.generated.h"
 
+class UGAttributeComponent;
 class UGActionComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -26,12 +27,14 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UCameraComponent> CameraComp;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<USpringArmComponent> SpringArmComp;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	TObjectPtr<UGActionComponent> ActionComp;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	TObjectPtr<UGAttributeComponent> AttributeComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input)
 	TObjectPtr<UInputMappingContext> MappingContext;

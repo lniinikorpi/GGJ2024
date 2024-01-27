@@ -3,6 +3,7 @@
 
 #include "GProjectile_Base.h"
 
+#include "GGlobalFunctionLibrary.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -23,6 +24,8 @@ AGProjectile_Base::AGProjectile_Base()
 	ProjectileMovementComp->InitialSpeed = 1000;
 	ProjectileMovementComp->bRotationFollowsVelocity = true;
 	ProjectileMovementComp->bInitialVelocityInLocalSpace = true;
+
+	DamageAmount = 40;
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +33,24 @@ void AGProjectile_Base::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AGProjectile_Base::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AGProjectile_Base::OnOverLapBegin);
+}
+
+void AGProjectile_Base::OnOverLapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Overlapping: %s"), *OtherActor->GetActorNameOrLabel());
+	if(OtherActor == GetInstigator())
+	{
+		return;
+	}
+	UGGlobalFunctionLibrary::ApplyDamage(GetInstigator(), OtherActor, DamageAmount);
+	GetWorld()->DestroyActor(this);
 }
 
 // Called every frame

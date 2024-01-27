@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "EnhancedInputComponent.h"
+#include "GAttributeComponent.h"
 #include "Action/GActionComponent.h"
 
 // Sets default values
@@ -24,6 +25,9 @@ AGCharacter::AGCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	ActionComp = CreateDefaultSubobject<UGActionComponent>("ActionComp");
+	AttributeComp = CreateDefaultSubobject<UGAttributeComponent>("AttributeComp");
+	AttributeComp->MaxHealth = 100;
+	AttributeComp->CurrentHealth = AttributeComp->MaxHealth;
 
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 }
@@ -69,11 +73,9 @@ void AGCharacter::MouseLook(const FInputActionValue& Value)
 
 	FVector mousePos = FVector::ZeroVector;
 
-	ECollisionChannel channel = ECollisionChannel::ECC_WorldStatic;
 	FHitResult Hitresult;
-	if (pc->GetHitResultUnderCursor(channel, false, Hitresult))
+	if (pc->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), false, Hitresult))
 	{
-		
 		UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(Cast<APlayerController>(GetController()), Hitresult.ImpactPoint, MousePosition, true);
 		//UE_LOG(LogTemp, Log, TEXT("%s"), *MousePosition.ToString());
 		mousePos = FVector(mouseX, mouseY, 0.0f);

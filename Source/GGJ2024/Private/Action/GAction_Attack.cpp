@@ -38,7 +38,12 @@ void UGAction_Attack::ActionAttackTimeElapsed(ACharacter* Instigator)
 
 FTransform UGAction_Attack::CalculateProjectileTransform(ACharacter* InstigatorActor)
 {
-	const FVector HandLocation = InstigatorActor->GetMesh()->GetSocketLocation("middle_01_lSocket");
+	FVector HandLocation = InstigatorActor->GetMesh()->GetSocketLocation("middle_01_lSocket");
+	UE_LOG(LogTemp, Log, TEXT("Hand location: %s"), *HandLocation.ToString());
+	if(HandLocation == FVector::Zero())
+	{
+		
+	}
 	FRotator SpawnRotator = InstigatorActor->GetMesh()->GetRelativeRotation();
 	SpawnRotator.Pitch = 0;
 	SpawnRotator.Yaw += 90;
