@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "GAIController.generated.h"
 
+class UGAttributeComponent;
 /**
  * 
  */
@@ -21,4 +22,11 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth, float Delta);
+
+	void PostInitializeComponents() override;
+
+	void OnPossess(APawn* InPawn) override;
 };

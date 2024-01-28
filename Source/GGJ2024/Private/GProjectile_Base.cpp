@@ -3,10 +3,15 @@
 
 #include "GProjectile_Base.h"
 
+#include "GCharacter.h"
+#include "GGameModeBase.h"
 #include "GGlobalFunctionLibrary.h"
 #include "Components/SphereComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "AI/GAICharacter.h"
+#include "Action/GActionComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGProjectile_Base::AGProjectile_Base()
@@ -50,9 +55,26 @@ void AGProjectile_Base::OnOverLapBegin(UPrimitiveComponent* OverlappedComponent,
 	{
 		return;
 	}
-	if(HitParticle)
+	//Don't hit humans with AI
+	if(GetInstigator()->GetClass()->IsChildOf(AGAICharacter::StaticClass()) && OtherActor->GetClass()->IsChildOf(AGAICharacter::StaticClass()))
+	{
+		UGActionComponent* ActionComponent = OtherActor->GetComponentByClass<UGActionComponent>();
+		if(ActionComponent)
+		{
+			if(ActionComponent->ActiveGameplayTags.HasTag(Cast<AGGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()))->HumanTag))
+			{
+				return;
+			}
+		}
+	}
+	if (HitParticle)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitParticle, GetActorLocation(), GetActorRotation());
+	}
+	if (HitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
+
 	}
 	UGGlobalFunctionLibrary::ApplyDamage(GetInstigator(), OtherActor, DamageAmount);
 	GetWorld()->DestroyActor(this);

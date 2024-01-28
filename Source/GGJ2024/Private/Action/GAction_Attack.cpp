@@ -7,6 +7,7 @@
 #include "Action/GActionComponent.h"
 #include "AI/GAICharacter.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UGAction_Attack::UGAction_Attack()
@@ -38,6 +39,10 @@ void UGAction_Attack::ActionAttackTimeElapsed(ACharacter* Instigator)
 	SpawnParams.Instigator = Instigator;
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, CalculateProjectileTransform(Instigator), SpawnParams);
 
+	if(StartSound)
+	{
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), StartSound, Instigator->GetActorLocation());
+	}
 	FTimerHandle TimerHandleFireRate;
 	FTimerDelegate DelegateFireRate;
 	DelegateFireRate.BindUFunction(this, "FireRateTimeElapsed", Instigator);

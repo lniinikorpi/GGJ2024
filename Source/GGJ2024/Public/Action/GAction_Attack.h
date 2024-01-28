@@ -40,4 +40,7 @@ protected:
 	float SpawnDelay;
 	UFUNCTION()
 	void SpawnDelayTimeElapsed(ACharacter* Instigator);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USoundBase> StartSound;
 };

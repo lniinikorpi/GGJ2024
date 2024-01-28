@@ -42,6 +42,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float DamageAmount;
 
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<USoundBase> HitSound;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
